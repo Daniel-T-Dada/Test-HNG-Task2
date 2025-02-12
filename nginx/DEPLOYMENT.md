@@ -50,7 +50,7 @@ sudo systemctl restart nginx
 ```bash
 # Copy and modify service file
 sudo cp nginx/fastapi_book.service /etc/systemd/system/
-sudo nano /etc/systemd/system/fastapi_book.service  # Update paths
+sudo nano /etc/systemd/system/fastapi_book.service  
 
 # Start service
 sudo systemctl daemon-reload
