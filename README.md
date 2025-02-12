@@ -1,5 +1,7 @@
 # FastAPI Book Management API
 
+![Test Status](https://github.com/$GITHUB_USERNAME/fastapi-book-project/actions/workflows/test.yml/badge.svg)
+
 ## Overview
 
 This project is a RESTful API built with FastAPI for managing a book collection. It provides comprehensive CRUD (Create, Read, Update, Delete) operations for books with proper error handling, input validation, and documentations.
@@ -144,3 +146,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 For support, please open an issue in the GitHub repository.
+
+## Deployment
+
+This application is configured to be deployed with Nginx as a reverse proxy. For detailed deployment instructions, see [Deployment Guide](nginx/DEPLOYMENT.md).
+
+### Quick Deployment Steps:
+
+1. Set up server with Python 3.12 and Nginx
+2. Clone repository and install dependencies
+3. Configure Nginx using provided configuration
+4. Set up systemd service for the application
+5. Start services and verify deployment
+
+For detailed instructions and troubleshooting, refer to the [Deployment Guide](nginx/DEPLOYMENT.md).
