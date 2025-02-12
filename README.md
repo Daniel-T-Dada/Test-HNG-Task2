@@ -54,8 +54,10 @@ fastapi-book-project/
 ### Prerequisites
 
 - Python 3.12
-- Git
-- pip (Python package manager)
+- FastAPI
+- Pydantic
+- pytest
+- uvicorn
 
 ### Setup
 
@@ -207,10 +209,17 @@ For detailed deployment instructions, see [Deployment Guide](nginx/DEPLOYMENT.md
 
 Quick steps:
 
-1. Set up server with Python 3.12 and Nginx
-2. Configure Nginx using provided configuration
-3. Set up systemd service
-4. Configure GitHub secrets
+1. Set up EC2 instance (Ubuntu 24.04 LTS)
+   - Public IP: 15.156.81.221
+   - Default user: ubuntu
+2. Configure security groups to allow:
+   - SSH (Port 22)
+   - HTTP (Port 80)
+   - HTTPS (Port 443)
+3. Set up Python 3.12 and Nginx
+4. Configure GitHub secrets:
+   - AWS_PEM_KEY
+   - AWS_HOST
 5. Push changes to trigger deployment
 
 ## Contributing
