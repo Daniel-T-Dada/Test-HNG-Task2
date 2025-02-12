@@ -1,0 +1,84 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to AWS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          pytest -v
+
+      - name: Deploy to EC2
+        env:
+          AWS_PEM_KEY: ${{ secrets.AWS_PEM_KEY }}
+          AWS_HOST: ${{ secrets.AWS_HOST }}
+          AWS_USER: ubuntu # Default user for Ubuntu AWS instances
+          DEPLOY_PATH: /home/ubuntu/fastapi-book
+        run: |
+          # Install SSH client
+          sudo apt-get install -y openssh-client
+
+          # Write the PEM key to a file
+          echo "$AWS_PEM_KEY" > aws_key.pem
+          chmod 600 aws_key.pem
+
+          # Deploy using rsync over SSH
+          rsync -avz --delete \
+            -e "ssh -i aws_key.pem -o StrictHostKeyChecking=no" \
+            --exclude '.git*' \
+            --exclude 'venv' \
+            --exclude '__pycache__' \
+            --exclude '*.pyc' \
+            ./ $AWS_USER@$AWS_HOST:$DEPLOY_PATH
+
+          # Setup and restart application
+          ssh -i aws_key.pem -o StrictHostKeyChecking=no $AWS_USER@$AWS_HOST << 'EOF'
+            cd $DEPLOY_PATH
+            
+            # Update system and install Python 3.12
+            sudo apt update
+            sudo apt install -y python3.12 python3.12-venv nginx
+
+            # Create virtual environment if it doesn't exist
+            python3 -m venv venv || true
+            source venv/bin/activate
+            
+            # Install/update dependencies
+            pip install -r requirements.txt
+            
+            # Copy Nginx configuration
+            sudo cp nginx/fastapi_book.conf /etc/nginx/sites-available/
+            sudo ln -sf /etc/nginx/sites-available/fastapi_book.conf /etc/nginx/sites-enabled/
+            sudo rm -f /etc/nginx/sites-enabled/default  # Remove default config
+            
+            # Copy and reload systemd service
+            sudo cp nginx/fastapi_book.service /etc/systemd/system/
+            sudo systemctl daemon-reload
+            
+            # Restart services
+            sudo systemctl restart nginx
+            sudo systemctl enable fastapi_book
+            sudo systemctl restart fastapi_book
+            sudo systemctl status fastapi_book
+          EOF
