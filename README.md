@@ -1,6 +1,7 @@
 # FastAPI Book Management API
 
 ![Test Status](https://github.com/$GITHUB_USERNAME/fastapi-book-project/actions/workflows/test.yml/badge.svg)
+![Deploy Status](https://github.com/$GITHUB_USERNAME/fastapi-book-project/actions/workflows/deploy.yml/badge.svg)
 
 ## Overview
 
@@ -118,54 +119,31 @@ Available genres:
 
 ## CI/CD Pipeline
 
-This project uses GitHub Actions for continuous integration:
+This project uses GitHub Actions for continuous integration and deployment:
 
 - **Test Pipeline**: Runs automatically on pull requests to the main branch
+
   - Executes all pytest test cases
   - Ensures code quality and functionality
   - Must pass before merging
+
+- **Deploy Pipeline**: Runs automatically when changes are merged to main
+  - Verifies tests pass
+  - Deploys to production server
+  - Updates application with latest changes
+  - Restarts services automatically
+
+### Required Secrets
+
+The following secrets must be set in GitHub repository settings for deployment:
+
+- `DEPLOY_KEY`: SSH private key for server access
+- `DEPLOY_HOST`: Hostname or IP of the deployment server
+- `DEPLOY_USER`: SSH user for deployment
+- `DEPLOY_PATH`: Path to deploy application on server
 
 ## Running Tests
 
 ```bash
 pytest -v
 ```
-
-## Error Handling
-
-The API includes proper error handling for:
-
-- Non-existent books
-- Invalid book IDs
-- Invalid genre types
-- Malformed requests
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-For support, please open an issue in the GitHub repository.
-
-## Deployment
-
-This application is configured to be deployed with Nginx as a reverse proxy. For detailed deployment instructions, see [Deployment Guide](nginx/DEPLOYMENT.md).
-
-### Quick Deployment Steps:
-
-1. Set up server with Python 3.12 and Nginx
-2. Clone repository and install dependencies
-3. Configure Nginx using provided configuration
-4. Set up systemd service for the application
-5. Start services and verify deployment
-
-For detailed instructions and troubleshooting, refer to the [Deployment Guide](nginx/DEPLOYMENT.md).
