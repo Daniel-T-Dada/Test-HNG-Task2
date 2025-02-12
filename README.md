@@ -1,5 +1,7 @@
 # FastAPI Book Management API
 
+![Test Status](https://github.com/$GITHUB_USERNAME/fastapi-book-project/actions/workflows/test.yml/badge.svg)
+
 ## Overview
 
 This project is a RESTful API built with FastAPI for managing a book collection. It provides comprehensive CRUD (Create, Read, Update, Delete) operations for books with proper error handling, input validation, and documentations.
@@ -114,10 +116,19 @@ Available genres:
 - Romance
 - Thriller
 
+## CI/CD Pipeline
+
+This project uses GitHub Actions for continuous integration:
+
+- **Test Pipeline**: Runs automatically on pull requests to the main branch
+  - Executes all pytest test cases
+  - Ensures code quality and functionality
+  - Must pass before merging
+
 ## Running Tests
 
 ```bash
-pytest
+pytest -v
 ```
 
 ## Error Handling
